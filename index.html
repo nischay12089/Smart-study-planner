@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StudyForge — Smart Study Planner</title>
+<meta name="description" content="Plan, schedule and track subject study time before exams.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css?v=1">
+</head>
+<body>
+
+<div id="app" class="app">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">SF</div>
+      <div class="brand-text">
+        <strong>StudyForge</strong>
+        <span>Smart Study Planner</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item is-active" data-view="dashboard">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/></svg>
+        <span>Dashboard</span></button>
+      <button class="nav-item" data-view="subjects">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v16H4zM13 4h7v10h-7z"/></svg>
+        <span>Subjects</span></button>
+      <button class="nav-item" data-view="schedule">
+        <svg viewBox="0 0 24 24"><path d="M7 2v3M17 2v3M3 9h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Schedule</span></button>
+      <button class="nav-item" data-view="focus">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.5"/></svg>
+        <span>Focus Lock</span>
+        <em class="nav-badge" id="navFocusBadge" hidden></em></button>
+      <button class="nav-item" data-view="insights">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Insights</span></button>
+      <button class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.5l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3.6V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Settings</span></button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="countdown" id="sideCountdown"></div>
+      <button class="btn btn-ghost btn-sm" id="themeToggle" title="Toggle theme">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg><span>Theme</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn only-mobile" id="menuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </button>
+      <div class="topbar-title">
+        <h1 id="viewTitle">Dashboard</h1>
+        <p id="viewSub">Your exam-ready overview</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="btnRegenerate">
+          <svg viewBox="0 0 24 24" class="ico"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Regenerate plan</span>
+        </button>
+        <button class="btn btn-primary" id="btnQuickFocus">
+          <svg viewBox="0 0 24 24" class="ico"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+          <span>Start focus</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="scroll" id="viewRoot"></div>
+  </main>
+</div>
+
+<!-- ===== Focus Lock Overlay ===== -->
+<div class="lock" id="lockOverlay" hidden>
+  <div class="lock-bg"></div>
+  <div class="lock-inner">
+    <div class="lock-top">
+      <span class="lock-chip" id="lockPhase">Focus</span>
+      <span class="lock-chip lock-chip-sub" id="lockTask">—</span>
+    </div>
+
+    <div class="lock-dial">
+      <svg viewBox="0 0 240 240" class="dial">
+        <circle cx="120" cy="120" r="104" class="dial-track"/>
+        <circle cx="120" cy="120" r="104" class="dial-prog" id="dialProg"/>
+      </svg>
+      <div class="dial-center">
+        <div class="dial-time" id="lockTime">45:00</div>
+        <div class="dial-meta" id="lockMeta">Cycle 1 · 45 min block</div>
+      </div>
+    </div>
+
+    <div class="lock-stats">
+      <div><b id="lockBreaches">0</b><span>Breaches</span></div>
+      <div><b id="lockFocusScore">100</b><span>Focus score</span></div>
+      <div><b id="lockElapsed">0m</b><span>Studied</span></div>
+    </div>
+
+    <div class="lock-actions">
+      <button class="btn btn-ghost" id="lockPause">Pause</button>
+      <button class="hold-btn" id="lockExit">
+        <span class="hold-fill"></span>
+        <span class="hold-label">Hold 3s to break lock</span>
+      </button>
+    </div>
+
+    <p class="lock-note" id="lockNote">Tab switching, window blur and leaving fullscreen are recorded as breaches.</p>
+  </div>
+
+  <div class="breach" id="breachScreen" hidden>
+    <div class="breach-card">
+      <div class="breach-icon">!</div>
+      <h2>Focus broken</h2>
+      <p id="breachMsg">You left the study window. Get back in.</p>
+      <button class="btn btn-primary btn-lg" id="breachReturn">Return to focus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Modal ===== -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <header class="modal-head">
+      <h3 id="modalTitle">Title</h3>
+      <button class="icon-btn" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </header>
+    <div class="modal-body" id="modalBody"></div>
+    <footer class="modal-foot" id="modalFoot"></footer>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="js/store.js?v=1"></script>
+<script src="js/scheduler.js?v=1"></script>
+<script src="js/charts.js?v=1"></script>
+<script src="js/focus.js?v=1"></script>
+<script src="js/views.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
